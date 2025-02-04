@@ -43,6 +43,24 @@ Sumber Referensi: [Hotel Booking](https://www.kaggle.com/datasets/mojtaba142/hot
 - **Jumlah Baris (Entries)**: 600 baris data, terdapat 600 entri atau record yang tercatat dalam dataset ini.  
 - **Jumlah Kolom (Columns)**: 10 kolom data, yang mencakup berbagai atribut terkait booking hotel yang dicatat dalam dataset. 
 
+### Missing Value
+![image](https://github.com/user-attachments/assets/5adb9808-684b-4f43-b69c-5714447091e5)
+
+Hasil output diatas menunjukkan bahwa tidak ada nilai yang hilang (missing value) di setiap kolom dalam dataset. Keberadaan data yang lengkap ini sangat penting untuk analisis lebih lanjut, karena memastikan bahwa semua informasi terkait hotel, seperti rating, jumlah tamu, jenis kamar, lokasi, jarak ke atraksi, musim, fasilitas, waktu pemesanan, dan harga per malam, tersedia secara utuh. Dengan demikian, analisis dan pengambilan keputusan dapat dilakukan dengan lebih akurat dan efektif.
+
+
+### Data Duplicate 
+![image](https://github.com/user-attachments/assets/5b246706-7a68-4127-879f-0252e888123b)
+
+Pada hasil output di atas menunjukkan bahwa tidak ada data yang memiliki isi duplikat sama dengan yang lainnya. Hal ini menandakan bahwa dataset yang digunakan telah bersih dari entri yang berulang, yang dapat mempengaruhi keakuratan model.
+
+### Outliers
+![image](https://github.com/user-attachments/assets/fc42dc80-333d-440a-91fb-682cb8196cd7)
+![image](https://github.com/user-attachments/assets/8dbca107-edd4-4f71-bc37-33ba037324d8)
+Dari analisis box plot pada dataset ini, dapat disimpulkan bahwa sebagian besar data terdistribusi dengan baik tanpa adanya outlier yang signifikan. Beberapa nilai ekstrem terdeteksi pada sebagian kecil data, namun tidak cukup mencolok untuk mempengaruhi validitas analisis atau model prediksi secara keseluruhan. Secara umum, distribusi data terlihat stabil, dengan rentang nilai yang terpusat dan terjaga. Meskipun demikian, beberapa nilai ekstrem perlu diperhatikan lebih lanjut untuk memastikan konsistensi dan akurasi dalam analisis lebih mendalam.
+
+
+
 ## Exploratory Data Analysis  
 
 ### Univariate Analysis  
@@ -157,16 +175,19 @@ Grafik di atas menunjukkan distribusi fasilitas hotel yang tersedia dalam datase
    - **Nights_Guests_Interaction** menunjukkan korelasi positif dengan **Number of Nights (0.63)** dan **Number of Guests (0.63)**, yang menunjukkan bahwa interaksi antara jumlah malam dan jumlah tamu berkontribusi pada pemesanan yang lebih lama dan lebih banyak tamu.
 
 ## Data Preparation
-Sebelum memasukkan data ke model latih, tiga langkah berikut akan dilakukan:  
+Sebelum memasukkan data ke model latih, empat langkah berikut akan dilakukan:  
 
 1. **Encoding Fitur Kategorik:**  
    Encoding fitur kategorik dilaksanakan di beberapa fitur yang bertipe object. Hal ini dilakukan karena model machine learning hanya dapat menerima data dalam bentuk numerik. Untuk encoding fitur, akan digunakan `LabelEncoder`.  
 
-2. **Train-Test-Split:**  
+2. **PCA (Principal Component Analysis):**  
+   Reduksi dimensi akan dilakukan dengan menggunakan PCA pada dua fitur, yaitu **Number of Nights** dan **Nights_Guests_Interaction**. Teknik PCA digunakan untuk mengurangi jumlah fitur dengan cara mentransformasikan data ke dalam ruang vektor yang lebih rendah namun tetap mempertahankan informasi yang paling penting. Hal ini dapat membantu mengurangi kompleksitas model dan meningkatkan kecepatan pemrosesan.
+
+3. **Train-Test-Split:**  
    Dataset akan dibagi menjadi data latih dan data uji dengan perbandingan 80:20, yaitu 80 persen data akan menjadi data latih dan 20 persen data akan menjadi data uji. Hal ini dilakukan supaya kita dapat melakukan validasi dengan benar tanpa bias dari model.  
 
-3. **Standarisasi:**  
-   Standarisasi menggunakan teknik `StandardScaler` dari library Scikit-learn. `StandardScaler` melakukan proses standarisasi fitur dengan mengurangkan mean (nilai rata-rata) kemudian membaginya dengan standar deviasi untuk menggeser distribusi. `StandardScaler` menghasilkan distribusi dengan standar deviasi sama dengan 1 dan mean sama dengan 0. Scaling ini dilaksanakan untuk membantu model machine learning yang akan dipakai lebih mudah diolah. 
+4. **Standarisasi:**  
+   Standarisasi menggunakan teknik `StandardScaler` dari library Scikit-learn. `StandardScaler` melakukan proses standarisasi fitur dengan mengurangkan mean (nilai rata-rata) kemudian membaginya dengan standar deviasi untuk menggeser distribusi. `StandardScaler` menghasilkan distribusi dengan standar deviasi sama dengan 1 dan mean sama dengan 0. Scaling ini dilaksanakan untuk membantu model machine learning yang akan dipakai lebih mudah diolah.
 
 ## Modelling
 Pada tahap ini, model machine learning yang akan dipakai ada tiga algoritma. Lalu performa masing-masing algoritma akan dievaluasi untuk menentukan algoritma mana yang memberikan hasil prediksi terbaik. Ketiga algoritma yang akan digunakan, antara lain:  
@@ -182,12 +203,14 @@ Pada tahap ini, model machine learning yang akan dipakai ada tiga algoritma. Lal
    - **Kekurangan:** Pembelajaran bisa berjalan lambat, tergantung pada parameter yang digunakan, dan tidak bisa memperbaiki model yang dihasilkan secara berulang.  
 
 3. **Boosting Algorithm:**  
-   Algoritma yang menggunakan teknik boosting bekerja dengan membangun model dari data latih. Kemudian ia membuat model kedua yang bertugas memperbaiki kesalahan dari model pertama. Model ditambahkan sampai data latih terprediksi dengan baik atau telah mencapai jumlah maksimum model untuk ditambahkan. Untuk parameter yang akan digunakan yaitu `learning_rate=0.01`, `random_state=55`.  
+   Algoritma yang menggunakan teknik boosting bekerja dengan membangun model dari data latih. Kemudian ia membuat model kedua yang bertugas memperbaiki kesalahan dari model pertama. Model ditambahkan sampai data latih terprediksi dengan baik atau telah mencapai jumlah maksimum model untuk ditambahkan. Untuk parameter yang akan digunakan yaitu `learning_rate=0.01`, `random_state=50`.  
    - **Kelebihan:** Algoritma ini sangat powerful dalam meningkatkan akurasi prediksi. Algoritma boosting sering mengungguli model yang lebih sederhana seperti logistic regression dan random forest.  
    - **Kekurangan:** Learning secara progresif dan sangat sensitif terhadap data noise dan outlier.
   
-Error dari masing-masing model:
+**Error dari masing-masing model:**
+
 ![image](https://github.com/user-attachments/assets/bd3657cc-c260-4e47-9219-52ab4b0fae27)
+
 Pada Gambar diatas, dapat dilihat bahwa model Random Forest memiliki nilai error yang lebih kecil dibanding model lain, menandakan bahwa model Random Forest merupakan model terbaik yang dapat digunakan untuk memprediksi harga hotel.
 
 ## Evaluation
@@ -202,7 +225,7 @@ Dimana:
 - \( ŷ \) = Nilai hasil prediksi 
 - \( n \) = Banyaknya data
 
-### Hasil Evaluasi Model  
+**Hasil Evaluasi Model** 
 
 Berikut adalah hasil evaluasi ketiga model menggunakan MSE pada tabel di bawah ini:  
 
